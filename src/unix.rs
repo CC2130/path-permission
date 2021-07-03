@@ -19,6 +19,9 @@ pub trait PathPermission {
 
     /// 判断路径可否被创建（当前无此路径）
     fn is_creatable(&self) -> io::Result<bool>;
+
+    /// 判断路径能否被删除
+    fn is_removable(&self) -> io::Result<bool>;
 }
 
 impl PathPermission for Path {
@@ -52,6 +55,22 @@ impl PathPermission for Path {
             }
         }
     }
+
+    fn is_removable(&self) -> io::Result<bool> {
+        // 文件不存在时，返回Ok(false)
+        if ! self.exists() {
+            return Ok(false)
+        }
+        let parent = match self.parent() {
+            None => Path::new("./"),
+            Some(parent) => parent,
+        };
+        if parent.is_writable().unwrap() & parent.is_excutable().unwrap() {
+            Ok(true)
+        } else {
+            Ok(false)
+        }
+    }
 }
 
 impl PathPermission for PathBuf {
@@ -69,6 +88,10 @@ impl PathPermission for PathBuf {
 
     fn is_creatable(&self) -> io::Result<bool> {
         self.as_path().is_creatable()
+    }
+
+    fn is_removable(&self) -> io::Result<bool> {
+        self.as_path().is_removable()
     }
 }
 

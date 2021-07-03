@@ -19,6 +19,7 @@ let path = Path::new("src/lib.rs");
 assert_eq!(path.is_readable().unwrap(), true);
 assert_eq!(path.is_writable().unwrap(), true);
 assert_eq!(path.is_excutable().unwrap(), false);
+assert_eq!(path.is_removable().unwrap(), true);
 
 let new_path = Path::new("a/b/d/e/f");
 
@@ -34,6 +35,7 @@ assert_eq!(new_path.is_creatable().unwrap(), true);
   
 ## 后续计划
 将完善，使之支持使用位掩码（bitmask）`764`，或`rwx`类型查看与转换。  
+暂不支持粘滞位的判断处理。  
   
 ## 感谢
 此项目部分代码，来源自项目[permissions](https://crates.io/crates/permissions)。  
