@@ -1,5 +1,6 @@
-# path-permission
-rust Path(Buf) 获取其权限（permission）的特性（trait)
+/*!
+# Path Permission
+
 在已有一个确定的路径时，可依此库来获取路径文件的权限。
 它为`Path(Buf)`提供了一个名为`PathPermission`的特性（trait），在使用`Path`类型
 时，可以此获取其文件权限，是否可读（r）、可写（w）、可执行（x）。  
@@ -36,3 +37,12 @@ assert_eq!(new_path.is_creatable().unwrap(), true);
   
 ## 感谢
 此项目部分代码，来源自项目[permissions](https://crates.io/crates/permissions)。  
+
+*/
+#[cfg(unix)]
+pub mod unix;
+
+#[cfg(unix)]
+pub use unix::*;
+
+//TODO Windows
