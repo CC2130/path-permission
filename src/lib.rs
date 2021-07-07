@@ -21,6 +21,14 @@ assert_eq!(path.is_writable().unwrap(), true);
 assert_eq!(path.is_excutable().unwrap(), false);
 assert_eq!(path.is_removable().unwrap(), true);
 
+assert_eq!(path.check_access(0o644).unwrap(), true);
+assert_eq!(path.get_access().unwrap(), "0644");
+
+assert_eq!(path.chmod(0o640).unwrap(), true);
+// 注意，这里已经格式化为字符串
+assert_eq!(path.get_access().unwrap(), "0640");
+assert_eq!(path.chmod(0o644).unwrap(), true);
+
 let new_path = Path::new("a/b/d/e/f");
 
 assert_eq!(new_path.is_creatable().unwrap(), true);
@@ -30,12 +38,12 @@ assert_eq!(new_path.is_creatable().unwrap(), true);
 在使用时需注意：  
   * 当返回值为Ok(false)时，意为无查看此路径的权限，即可能此路径不存在（从起始
 路径开始，至无访问权限的子级路径，是存在的）。  
-  * 如无必须，不太建议使用相对路径，可使用[path-calculate]
-(https://crates.io/crates/path-calculate)将路径转换为绝对路径。  
+  * 如无必须，不太建议使用相对路径，可使用
+[path-calculate](https://crates.io/crates/path-calculate)将路径转换为绝对路径。  
+  * get_access() 所返回的权限已被格式化为字符串。  
   
 ## 后续计划
-将完善，使之支持使用位掩码（bitmask）`764`，或`rwx`类型查看与转换。  
-暂不支持粘滞位的判断处理。  
+计划支持 rwx 字符串输出、权限变更方法。  
   
 ## 感谢
 此项目部分代码，来源自项目[permissions](https://crates.io/crates/permissions)。  
